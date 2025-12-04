@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="超级玛丽经典游戏 - 在线免费玩，包含多个关卡、排行榜系统和经典玛丽游戏体验">
+    <meta name="keywords" content="超级玛丽,马里奥游戏,在线游戏,HTML5游戏,免费游戏,经典游戏">
+    <meta name="author" content="Mario Game Studio">
+    <title>超级玛丽 - 经典冒险游戏</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- SEO优化内容 -->
+    <div class="seo-content">
+        <h1>超级玛丽在线游戏 - 免费玩经典马里奥冒险</h1>
+        <p>体验经典的超级玛丽游戏，包含多个关卡、陷阱、敌人和收集品。在线免费玩，无需下载。</p>
+        <p>游戏特色：多关卡设计、全球排行榜、经典音乐、流畅操作、挑战性陷阱系统</p>
+    </div>
+
+    <!-- 登录页面 -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <h2>🍄 超级玛丽</h2>
+            <div id="loginForm">
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input type="text" id="loginUsername" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="loginPassword" placeholder="请输入密码">
+                        <span class="toggle-password" onclick="togglePasswordVisibility('loginPassword')">👁️</span>
+                    </div>
+                </div>
+                <button class="btn" onclick="handleLogin()">登录</button>
+                <div class="switch-form">
+                    还没有账号？<a href="#" onclick="showRegister()">立即注册</a>
+                </div>
+            </div>
+            <div id="registerForm" style="display: none;">
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input type="text" id="regUsername" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="regPassword" placeholder="请输入密码">
+                        <span class="toggle-password" onclick="togglePasswordVisibility('regPassword')">👁️</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>确认密码</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="regConfirmPassword" placeholder="请再次输入密码">
+                        <span class="toggle-password" onclick="togglePasswordVisibility('regConfirmPassword')">👁️</span>
+                    </div>
+                </div>
+                <button class="btn" onclick="handleRegister()">注册</button>
+                <div class="switch-form">
+                    已有账号？<a href="#" onclick="showLogin()">返回登录</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主菜单 -->
+    <div class="main-menu" id="mainMenu">
+        <div class="menu-content">
+            <h1 class="game-title">🍄 超级玛丽 🍄</h1>
+            <div class="menu-buttons">
+                <button class="menu-btn" onclick="showLevelSelect()">开始游戏</button>
+                <button class="menu-btn" onclick="showLeaderboard()">排行榜</button>
+                <button class="menu-btn" onclick="logout()">退出登录</button>
+            </div>
+            <div style="margin-top: 30px; color: white; font-size: 18px;">
+                欢迎回来，<span id="currentUser"></span>！
+            </div>
+        </div>
+    </div>
+
+    <!-- 关卡选择 -->
+    <div class="level-select" id="levelSelect">
+        <button class="back-btn" onclick="backToMenu()">返回菜单</button>
+        <h2 style="text-align: center; color: white; font-size: 48px; margin-bottom: 40px;">选择关卡</h2>
+        <div class="level-grid" id="levelGrid"></div>
+    </div>
+
+    <!-- 排行榜 -->
+    <div class="leaderboard" id="leaderboard">
+        <button class="back-btn" onclick="backToMenu()">返回菜单</button>
+        <div class="leaderboard-content">
+            <h2>🏆 全球排行榜 🏆</h2>
+            <div id="rankList"></div>
+        </div>
+    </div>
+
+    <!-- 游戏画布 -->
+    <div class="game-container" id="gameContainer">
+        <div class="game-ui">
+            <div>得分: <span id="score">0</span></div>
+            <div>生命: <span id="lives">3</span> ❤️</div>
+            <div>时间: <span id="time">300</span></div>
+            <div>金币: <span id="coins">0</span> 🪙</div>
+        </div>
+        <button class="pause-button" onclick="pauseGame()">⏸ 暂停</button>
+        <canvas id="gameCanvas"></canvas>
+        
+        <!-- 触屏控制按钮 -->
+        <div class="touch-controls" id="touchControls">
+            <div class="touch-left-controls">
+                <button class="touch-btn touch-left" id="touchLeft">◀</button>
+                <button class="touch-btn touch-right" id="touchRight">▶</button>
+            </div>
+            <div class="touch-right-controls">
+                <button class="touch-btn touch-jump" id="touchJump">跳跃</button>
+            </div>
+        </div>
+        
+        <!-- 暂停菜单 -->
+        <div class="pause-menu" id="pauseMenu">
+            <h3>游戏暂停</h3>
+            <button class="pause-btn" onclick="resumeGame()">继续游戏</button>
+            <button class="pause-btn" onclick="restartLevel()">重新开始</button>
+            <button class="pause-btn" onclick="quitToMenu()">退出到菜单</button>
+        </div>
+
+        <!-- 游戏结束 -->
+        <div class="game-over" id="gameOver">
+            <h2 id="gameOverTitle">游戏结束</h2>
+            <div class="score">最终得分: <span id="finalScore">0</span></div>
+            <button class="pause-btn" onclick="restartLevel()">重试</button>
+            <button class="pause-btn" onclick="nextLevel()">下一关</button>
+            <button class="pause-btn" onclick="quitToMenu()">返回菜单</button>
+        </div>
+
+        <!-- 提示信息 -->
+        <div class="hint" id="hint"></div>
+    </div>
+
+    <!-- 音乐控制 -->
+    <div class="music-control" id="musicControl" onclick="toggleMusic()"></div>
+
+    <!-- 背景音乐 -->
+    <audio id="bgMusic" loop>
+        <source src="data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAASAAAeMAAUFBQUFCIiIiIiIjAwMDAwPj4+Pj4+TExMTExZWVlZWVlnZ2dnZ3V1dXV1dYODg4ODkZGRkZGRn5+fn5+frKysrKy6urq6urrIyMjIyNbW1tbW1uTk5OTk8vLy8vLy//////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAAAAAAAAAAAHgxjLMP1AAAAAAAA//tQZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV" type="audio/mp3">
+    </audio>
+
+    <script src="game.js"></script>
+</body>
+</html>
